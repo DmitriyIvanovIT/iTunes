@@ -5,7 +5,10 @@ const radioPlayerInit = () => {
         radioCoverImg = document.querySelector('.radio-cover__img'),
         radioItem = document.querySelectorAll('.radio-item'),
         radioHeader = document.querySelector('.radio-header__big'),
-        radioStop = document.querySelector('.radio-stop');
+        radioStop = document.querySelector('.radio-stop'),
+        radioVolumeDown = document.querySelector('.radio-volume-down'),
+        radioVolume = document.querySelector('.radio-volume'),
+        radioVolumeUp = document.querySelector('.radio-volume-up');
 
     const audio = new Audio();
     audio.type = 'audio/aac';
@@ -27,7 +30,9 @@ const radioPlayerInit = () => {
         selectItem = elem => {
             radioItem.forEach(item => item.classList.remove('select'));
             elem.classList.add('select');
-        };
+        },
+        changeVolume = n => audio.volume = n / 100;
+
     // Обработчики событий
     radioNavigation.addEventListener('change', event => {
         const target = event.target,
@@ -53,6 +58,37 @@ const radioPlayerInit = () => {
         }
 
         changeIconPlay();
+    });
+
+    radioVolume.addEventListener('input', () => {
+        changeVolume(radioVolume.value);
+    });
+
+    radioVolumeDown.addEventListener('click', () => {
+        if (radioVolume.value === 100) {
+            radioVolumeUp.disabled = true; 
+        } else if (radioVolume.value === 0) {
+            radioVolumeDown.disabled = true;
+        } else {
+            radioVolumeUp.disabled = false;
+            radioVolumeDown.disabled =false;
+        };
+
+        radioVolume.value -= 10;
+        changeVolume(radioVolume.value);
+    });
+    radioVolumeUp.addEventListener('click', () => {
+        if (radioVolume.value === 100) {
+            radioVolumeUp.disabled = true; 
+        } else if (radioVolume.value === 0) {
+            radioVolumeDown.disabled = true;
+        } else {
+            radioVolumeUp.disabled = false;
+            radioVolumeDown.disabled =false;
+        };
+        
+        radioVolume.value += 10;
+        changeVolume(radioVolume.value);
     });
 }
 

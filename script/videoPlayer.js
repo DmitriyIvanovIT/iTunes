@@ -5,7 +5,11 @@ const videoPlayerInit = () => {
         videoButtonStop = document.querySelector('.video-button__stop'),
         videoTimePassed = document.querySelector('.video-time__passed'),
         videoProgress = document.querySelector('.video-progress'),
-        videoTimeTotal = document.querySelector('.video-time__total');
+        videoTimeTotal = document.querySelector('.video-time__total'),
+        videoFullScreen = document.querySelector('.video-full__screen'),
+        videoVolume = document.querySelector('.video-volume'),
+        videoVolumeDown = document.querySelector('.video-volume-down'),
+        videoVolumeUp = document.querySelector('.video-volume-up');
 
     // функции
     const toggleIcon = () => {
@@ -32,7 +36,8 @@ const videoPlayerInit = () => {
 
             toggleIcon();
         },
-        addZero = n => n < 10 ? '0'+ n : n;
+        addZero = n => n < 10 ? '0' + n : n,
+        changeVolume = n => videoPlayer.volume = n / 100;
 
     // события
     videoPlayer.addEventListener('click', playVideo);
@@ -46,7 +51,7 @@ const videoPlayerInit = () => {
             duration = videoPlayer.duration;
 
         videoProgress.value = (currentTime / duration) * 100;
-            
+
         let minutPassed = Math.floor(currentTime / 60),
             secondPassed = Math.floor(currentTime % 60),
             minutTotal = Math.floor(duration / 60),
@@ -54,16 +59,53 @@ const videoPlayerInit = () => {
 
         videoTimePassed.textContent = `${addZero(minutPassed)}:${addZero(secondPassed)}`;
         videoTimeTotal.textContent = `${addZero(minutTotal)}:${addZero(secondTotal)}`;
-        
-        if (currentTime === duration) {stopPlay()};
+
+        if (currentTime === duration) {
+            stopPlay()
+        };
     });
 
-    videoProgress.addEventListener('change', () => {
+    videoProgress.addEventListener('input', () => {
         const duration = videoPlayer.duration,
-        value = videoProgress.value;
+            value = videoProgress.value;
 
-        videoPlayer.currentTime = (value *duration) / 100;
-    })
+        videoPlayer.currentTime = (value * duration) / 100;
+    });
+
+    videoFullScreen.addEventListener('click', () => {
+        videoPlayer.requestFullscreen();
+    });
+
+    videoVolume.addEventListener('input', () => {
+        changeVolume(videoVolume.value);
+    });
+
+    videoVolumeDown.addEventListener('click', () => {
+        if (videoVolume.value === 100) {
+            videoVolumeUp.disabled = true; 
+        } else if (videoVolume.value === 0) {
+            videoVolumeDown.disabled = true;
+        } else {
+            videoVolumeUp.disabled = false;
+            videoVolumeDown.disabled =false;
+        };
+
+        videoVolume.value -= 10;
+        changeVolume(videoVolume.value);
+    });
+    videoVolumeUp.addEventListener('click', () => {
+        if (videoVolume.value === 100) {
+            videoVolumeUp.disabled = true; 
+        } else if (videoVolume.value === 0) {
+            videoVolumeDown.disabled = true;
+        } else {
+            videoVolumeUp.disabled = false;
+            videoVolumeDown.disabled =false;
+        };
+        
+        videoVolume.value += 10;
+        changeVolume(videoVolume.value);
+    });
 }
 
 export default videoPlayerInit;
