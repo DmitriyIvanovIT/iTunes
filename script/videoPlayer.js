@@ -61,7 +61,7 @@ const videoPlayerInit = () => {
         videoTimeTotal.textContent = `${addZero(minutTotal)}:${addZero(secondTotal)}`;
 
         if (currentTime === duration) {
-            stopPlay()
+            stopPlay();
         };
     });
 
